@@ -14,12 +14,12 @@ def create_api_key(project_id: str, suffix: str) -> Key:
 
     Returns:
         response: Returns the created API Key.
-    """
+    """ 
     # Create the API Keys client.
     client = api_keys_v2.ApiKeysClient()
 
     key = api_keys_v2.Key()
-    key.display_name = f"My first API key - {suffix}"
+    key.display_name = f"YouTube Key - {suffix}"
 
     # Initialize request and set arguments.
     request = api_keys_v2.CreateKeyRequest()
@@ -69,7 +69,8 @@ def restrict_api_key_server(project_id: str, key_id: str) -> Key:
     restrictions.server_key_restrictions = server_key_restrictions
 
     key = api_keys_v2.Key()
-    key.name = f"projects/{project_id}/locations/global/keys/{key_id}"
+    # key.name = f"projects/{project_id}/locations/global/keys/{key_id}"
+    key.name = key_id
     key.restrictions = restrictions
 
     # Initialize request and set arguments.
@@ -90,5 +91,8 @@ def main():
 
     with open(os.path.join(".", ".env"), "a") as env_file:
         raw_api_key = create_api_key(my_id, "raw")
-        secured_key = restrict_api_key_server(my_id, raw_api_key.name)
-        env_file.write("API_KEY=" + secured_key)
+        secured_api_key = restrict_api_key_server(my_id, raw_api_key.name)
+        env_file.write("API_KEY=" + secured_api_key.key_string)
+
+if __name__ == "__main__":
+    main()
